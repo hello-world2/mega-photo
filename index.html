@@ -61,21 +61,48 @@ nav a:hover{
     color:orange;
 }
 
-.hero{
-    background:url('service1.jpeg') no-repeat center center/cover;
-    height:400px;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    background-blend-mode:darken;
-    background-color:rgba(0,0,0,0.6);
+.hero {
+    position: relative;
+    background: url('service1.jpeg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 60vh; /* Responsive height: 60% of viewport height */
+    min-height: 300px; /* Ensures it doesn't get too small on very small screens */
+    color: white;
 }
 
-.hero h2{
-    font-size:38px;
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* dark overlay for readability */
 }
+
+.hero > div {
+    position: relative;
+    z-index: 1; /* Keep text above overlay */
+    padding: 0 20px;
+}
+
+.hero h2 {
+    font-size: clamp(24px, 5vw, 38px); /* Text scales between 24px and 38px depending on screen width */
+}
+
+.hero p {
+    font-size: clamp(16px, 2.5vw, 20px);
+    margin-top: 10px;
+}
+
+.hero .btn {
+    margin-top: 15px;
+    font-size: 1rem;
+    padding: 10px 20px;
+}
+
 
 #gallery{
     padding:50px 20px;
@@ -274,58 +301,58 @@ logo stamp design, online form services, online payment services, photocopy and 
 </section>
 
 
-<!-- BOOKING FORM -->
 <section id="booking" class="services">
-<h2>Book Photography Service</h2>
+  <h2>Book Photography Service</h2>
 
-<form action="https://formsubmit.co/prasantmagar1997@gmail.com" method="POST">
-<input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="_subject" value="New Booking - Mega Photo Studio">
+  <form id="bookingForm" action="https://formsubmit.co/prasantmagar1997@gmail.com" method="POST">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_subject" value="New Booking - Mega Photo Studio">
 
-<input type="text" name="Name" placeholder="Full Name" required>
-<input type="tel" name="Phone" placeholder="Phone Number" required>
+    <input type="text" name="Name" placeholder="Full Name" required>
+    <input type="tel" name="Phone" placeholder="Phone Number" required>
 
-<select name="Service" required>
-<option>Wedding Photography</option>
-<option>Birthday Photography</option>
-<option>Party/Event Coverage</option>
-<option>Videography</option>
-</select>
+    <select name="Service" required>
+      <option>Wedding Photography</option>
+      <option>Birthday Photography</option>
+      <option>Party/Event Coverage</option>
+      <option>Videography</option>
+    </select>
 
-<input type="date" name="Event Date" required>
-<input type="text" name="Event Location" placeholder="Event Location" required>
+    <input type="date" name="Event Date" required>
+    <input type="text" name="Event Location" placeholder="Event Location" required>
 
-<button type="submit" onclick="sendBookingWhatsApp()">Submit Booking</button>
-</form>
+    <button type="submit">Submit Booking</button>
+  </form>
 </section>
+
 
 <!-- ORDER FORM -->
 <section id="order">
-<h2>Order Printing & Designing</h2>
+  <h2>Order Printing & Designing</h2>
 
-<form action="https://formsubmit.co/prasantmagar1997@gmail.com" method="POST" enctype="multipart/form-data">
-<input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="_subject" value="New Order - Mega Photo Studio">
+  <form id="orderForm" action="https://formsubmit.co/prasantmagar1997@gmail.com" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_subject" value="New Order - Mega Photo Studio">
 
-<input type="text" name="Name" placeholder="Full Name" required>
-<input type="tel" name="Phone" placeholder="Phone Number" required>
+    <input type="text" name="Name" placeholder="Full Name" required>
+    <input type="tel" name="Phone" placeholder="Phone Number" required>
 
-<select name="Order Type" required>
-<option>Photo Frame</option>
-<option>Flex Banner</option>
-<option>Logo Stamp</option>
-<option>Color Printing</option>
-<option>Passport-size Photo</option>
-<option>Photocopy</option>
-</select>
+    <select name="Order Type" required>
+      <option>Photo Frame</option>
+      <option>Flex Banner</option>
+      <option>Logo Stamp</option>
+      <option>Color Printing</option>
+      <option>Passport-size Photo</option>
+      <option>Photocopy</option>
+    </select>
 
-<textarea name="Order Details" placeholder="Write Order Details Here..." required></textarea>
+    <textarea name="Order Details" placeholder="Write Order Details Here..." required></textarea>
+    <input type="file" name="attachment">
 
-<input type="file" name="attachment">
-
-<button type="submit" onclick="sendOrderWhatsApp()">Submit Order</button>
-</form>
+    <button type="submit">Submit Order</button>
+  </form>
 </section>
+
 
 <section id="contact" class="contact">
 <h2>Contact Us</h2>
@@ -340,13 +367,19 @@ logo stamp design, online form services, online payment services, photocopy and 
 
 <a href="https://wa.me/9779808991373" class="whatsapp">💬</a>
 
-<script>
-function sendBookingWhatsApp() {
-    var name = document.querySelector('#booking input[name="Name"]').value;
-    var phone = document.querySelector('#booking input[name="Phone"]').value;
-    var service = document.querySelector('#booking select[name="Service"]').value;
-    var date = document.querySelector('#booking input[name="Event Date"]').value;
-    var location = document.querySelector('#booking input[name="Event Location"]').value;
+
+
+ <script>
+/* Booking Form */
+document.querySelector('#bookingForm').addEventListener('submit', function(e){
+    e.preventDefault(); // Stop default submission
+
+    // Collect values
+    var name = this.querySelector('input[name="Name"]').value;
+    var phone = this.querySelector('input[name="Phone"]').value;
+    var service = this.querySelector('select[name="Service"]').value;
+    var date = this.querySelector('input[name="Event Date"]').value;
+    var location = this.querySelector('input[name="Event Location"]').value;
 
     var message = "📸 New Booking - Mega Photo Studio%0A%0A"
         + "Name: " + name + "%0A"
@@ -355,14 +388,21 @@ function sendBookingWhatsApp() {
         + "Date: " + date + "%0A"
         + "Location: " + location;
 
+    // Open WhatsApp
     window.open("https://wa.me/9779808991373?text=" + message, "_blank");
-}
 
-function sendOrderWhatsApp() {
-    var name = document.querySelector('#order input[name="Name"]').value;
-    var phone = document.querySelector('#order input[name="Phone"]').value;
-    var orderType = document.querySelector('#order select[name="Order Type"]').value;
-    var details = document.querySelector('#order textarea[name="Order Details"]').value;
+    // Submit form after WhatsApp opens
+    this.submit();
+});
+
+/* Order Form */
+document.querySelector('#orderForm').addEventListener('submit', function(e){
+    e.preventDefault(); // Stop default submission
+
+    var name = this.querySelector('input[name="Name"]').value;
+    var phone = this.querySelector('input[name="Phone"]').value;
+    var orderType = this.querySelector('select[name="Order Type"]').value;
+    var details = this.querySelector('textarea[name="Order Details"]').value;
 
     var message = "🖨 New Order - Mega Photo Studio%0A%0A"
         + "Name: " + name + "%0A"
@@ -370,9 +410,14 @@ function sendOrderWhatsApp() {
         + "Order: " + orderType + "%0A"
         + "Details: " + details;
 
+    // Open WhatsApp
     window.open("https://wa.me/9779808991373?text=" + message, "_blank");
-}
+
+    // Submit form after WhatsApp opens
+    this.submit();
+});
 </script>
+
 
 </body>
 </html>
